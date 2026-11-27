@@ -4,7 +4,22 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0e1116;color:#e8ecf2;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
-     padding:22px 26px 60px}
+     padding:22px 26px 60px 218px}
+/* ---- 左侧固定导览栏 ---- */
+.sidenav{position:fixed;top:0;left:0;bottom:0;width:196px;background:#10141b;border-right:1px solid #1f2632;
+  padding:16px 12px;overflow-y:auto;z-index:50}
+.sidenav h6{font-size:10.5px;color:#5d6a7d;font-weight:700;letter-spacing:1px;margin:14px 4px 6px;text-transform:uppercase}
+.sidenav h6:first-child{margin-top:0}
+.sidenav a{display:block;font-size:12.5px;color:#9aa8bb;text-decoration:none;padding:6px 10px;border-radius:7px;
+  margin-bottom:2px;line-height:1.5;transition:.13s}
+.sidenav a:hover{background:#1a2230;color:#c7d3e2}
+.sidenav a.on{background:linear-gradient(135deg,#2f6df6,#1d4ed8);color:#fff;font-weight:600}
+/* ---- prompt 折叠 ---- */
+.pbody{display:none}
+.pcard.open .pbody{display:block}
+.pfold{display:inline-block;font-size:11px;color:#8fb4ff;background:#1a2433;border:1px solid #2a3a52;border-radius:5px;
+  padding:3px 10px;cursor:pointer;margin-left:8px;transition:.13s}
+.pfold:hover{background:#22304a;color:#fff}
 h1{font-size:21px;font-weight:700;letter-spacing:.3px}
 .head{display:flex;align-items:flex-start;gap:22px;flex-wrap:wrap}
 .head .left{flex:1 1 420px;min-width:0}
@@ -169,6 +184,67 @@ input[name=tab]{position:absolute;opacity:0;pointer-events:none;width:0;height:0
 .pbody{font-size:12px;color:#b8c4d4;line-height:2.0}
 .pbody b{color:#8fb4ff}
 </style></head><body>
+<nav class="sidenav">
+<h6>类目素材</h6>
+<a href="#p0" data-p="p0">🏃 运动户外</a>
+<a href="#p1" data-p="p1">🩲 贴身衣物</a>
+<a href="#p2" data-p="p2">👗 女装</a>
+<a href="#p3" data-p="p3">👔 男装</a>
+<a href="#p4" data-p="p4">💎 珠宝配饰</a>
+<a href="#p5" data-p="p5">🎒 箱包鞋靴</a>
+<h6>热点拆解&amp;Prompt</h6>
+<a href="#p6">📊 总览对比</a>
+<a href="#D1">🎯 D1 痛点自爆</a>
+<a href="#D2">😌 D2 自嘲共鸣</a>
+<a href="#D3">💪 D3 动作实测</a>
+<a href="#D4">🧶 D4 触感特写</a>
+<a href="#D5">🏭 D5 源头人设</a>
+<a href="#D6">🛒 D6 抢购氛围</a>
+</nav>
+<script>
+function togglePrompt(btn){
+  var card = btn.closest('.pcard');
+  var open = card.classList.toggle('open');
+  btn.textContent = open ? '收起 ▴' : '展开 ▾';
+}
+// 类目tab跳转：点侧栏自动激活对应radio tab
+document.querySelectorAll('.sidenav a[data-p]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    var pid = a.getAttribute('data-p');
+    var idx = pid.replace('p','');
+    var radio = document.getElementById('t'+idx);
+    if(radio){ radio.checked = true; }
+    // 不阻止默认锚点跳转（p0-p6锚点存在）
+  });
+});
+// D1-D6 与 p6 锚点：先激活热点tab，再手动滚动到目标（panel显示后再定位才有效）
+function gotoT6(target){
+  var r = document.getElementById('t6');
+  if(r) r.checked = true;
+  setTimeout(function(){
+    var el = document.getElementById(target);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 60);
+}
+document.querySelectorAll('.sidenav a[href^="#D"]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    e.preventDefault(); gotoT6(a.getAttribute('href').slice(1));
+  });
+});
+var ov = document.querySelector('.sidenav a[href="#p6"]');
+if(ov) ov.addEventListener('click', function(e){ e.preventDefault(); gotoT6('p6'); });
+// 当前区块高亮
+var secObs = new IntersectionObserver(function(es){
+  es.forEach(function(en){
+    if(en.isIntersecting){
+      document.querySelectorAll('.sidenav a').forEach(function(x){x.classList.remove('on')});
+      var link = document.querySelector('.sidenav a[href="#'+en.target.id+'"]');
+      if(link) link.classList.add('on');
+    }
+  });
+},{rootMargin:'-20% 0px -70% 0px'});
+document.querySelectorAll('.panel[id],.dirblock[id]').forEach(function(s){secObs.observe(s)});
+</script>
 <script>document.addEventListener('DOMContentLoaded',function(){function load(v){if(!v.dataset.src)return;v.src=v.dataset.src;v.preload='metadata';v.addEventListener('loadedmetadata',function(){try{v.currentTime=0.6;}catch(e){}});v.addEventListener('seeked',function(){try{v.pause();}catch(e){}});v.load();}var vs=[].slice.call(document.querySelectorAll('video[data-src]'));if(!('IntersectionObserver' in window)){vs.forEach(load);return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){load(e.target);io.unobserve(e.target);}});},{rootMargin:'400px'});vs.forEach(function(v){io.observe(v)});});</script>
 <div class="head"><div class="left">
 <h1>服饰行业 · 近 7 日高跑量素材</h1>
@@ -593,7 +669,7 @@ input[name=tab]{position:absolute;opacity:0;pointer-events:none;width:0;height:0
 <div class="dmeta" style="color:#8fb4ff">· 关键位：0-3s 痛点自曝（捏肉/自嘲）→ 4-10s 穿上+功能图解 → 11-15s 外穿对比+引导</div>
 <div class="refgrid"><div class="refcard"><div class="rvwrap"><video src="https://adsmind.gdtimg.com/ads_svp_video__0b53jmad2aaaiuapixx7anvbwsyehvfqapka.f0.mp4#t=1.5" preload="metadata" muted playsinline controls></video>
 <div class="rmeta"><span class="rmetat">王炸机场背心 · 痛点开场</span><br>7日日均消耗 &lt;1万 · ROI 3-5 · 新晋走势 · 3s完播 25%<br><span class="rmetab">全子类目转化标杆，新晋起量 2.5万/日</span></div>
-<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
+<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="pfold" onclick="togglePrompt(this)">展开 ▾</button><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
 <div class="pbody"><b>【剧情梗概】</b><br>－ 0—3秒：近景：女主播坐在沙发/卧室，双手捏起小腹赘肉对镜头自嘲，字幕「肚子上肥软的肉一层接着一层」，情绪真实不表演。<br>－ 4—10秒：她拿出【产品】美体背心穿上，镜头跟拍穿入过程；字幕依次弹出「腋侧收副乳」「大U型承托」「加塑形衣」，对应身体部位特写。<br>－ 11—15秒：穿外衣出门对镜微笑，侧身对比前后的腰线；字幕「一件搞定」，引导点击直播间链接。<br><br><b>【生成要求】</b><br>
 － 人物：参考视频的人物关系与年龄/穿搭/光线风格一致，人物可为 AI 合成<br>
 － 前 3 秒：必须完成情绪/冲突/利益点其中之一的视觉钩子，禁止静置开场<br>
@@ -608,7 +684,7 @@ input[name=tab]{position:absolute;opacity:0;pointer-events:none;width:0;height:0
 【空切词】 产品名／品牌名／价格／活动力度／痛点与卖点话术／人物形象<br>
 【合规小字】 本视频人物由 AI 合成；功效与参数以产品实际规格为准，不得夸大。</textarea></div></div></div><div class="refcard"><div class="rvwrap"><video src="https://adsmind.gdtimg.com/ads_svp_video__0bc3sebqgaad44aa3c7iorvbteieaoiqga2a.f0.mp4#t=1.5" preload="metadata" muted playsinline controls></video>
 <div class="rmeta"><span class="rmetat">塑身背心变装</span><br>7日日均消耗 &lt;1万 · ROI 3-5 · 波动走势 · 3s完播 28.3%<br><span class="rmetab">CVR 21.1% 全表第一</span></div>
-<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
+<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="pfold" onclick="togglePrompt(this)">展开 ▾</button><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
 <div class="pbody"><b>【剧情梗概】</b><br>－ 0—3秒：女主棕色美体背心+灰色卫裤全身出镜，边走边拍，字幕「正面还挺腰」——先看整体效果再讲产品。<br>－ 4—10秒：切近景：面料抓握回弹、侧腰收束特写；叠字卡「一件=塑形衣+加绒打底」，旁白讲收腹挺腰原理。<br>－ 11—15秒：换一件外套罩上，展示「内穿外搭都显瘦」；最后一帧价格贴片，引导下单。<br><br><b>【生成要求】</b><br>
 － 人物：参考视频的人物关系与年龄/穿搭/光线风格一致，人物可为 AI 合成<br>
 － 前 3 秒：必须完成情绪/冲突/利益点其中之一的视觉钩子，禁止静置开场<br>
@@ -628,7 +704,7 @@ input[name=tab]{position:absolute;opacity:0;pointer-events:none;width:0;height:0
 <div class="dmeta" style="color:#8fb4ff">· 关键位：0-3s 共鸣句开场 → 4-10s 翻内里/拉腰头逐条验证 → 11-15s 多色/比价收口</div>
 <div class="refgrid"><div class="refcard"><div class="rvwrap"><video src="https://adsmind.gdtimg.com/ads_svp_video__0bc3wiaamaaajaacf4e2nrvbvmqea2zaabsa.f0.mp4#t=1.5" preload="metadata" muted playsinline controls></video>
 <div class="rmeta"><span class="rmetat">保暖裤自嘲开场</span><br>7日日均消耗 &lt;1万 · ROI &lt;3 · 稳定走势 · 3s完播 37.2%<br><span class="rmetab">CVR 17.35% 子类目最高</span></div>
-<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
+<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="pfold" onclick="togglePrompt(this)">展开 ▾</button><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
 <div class="pbody"><b>【剧情梗概】</b><br>－ 0—3秒：女主人手持深蓝保暖裤出镜，开口即自嘲：「要不是冬天冷，谁穿这玩意」——用共鸣句替代叫卖。<br>－ 4—10秒：翻出内里绒面给镜头看，再拉扯腰头演示弹力，字幕「加绒布」「弹性回力更大」「不松垮下滑」逐条验证。<br>－ 11—15秒：多色并排挂架收尾，字幕「XX元一条」，引导点击小黄车。<br><br><b>【生成要求】</b><br>
 － 人物：参考视频的人物关系与年龄/穿搭/光线风格一致，人物可为 AI 合成<br>
 － 前 3 秒：必须完成情绪/冲突/利益点其中之一的视觉钩子，禁止静置开场<br>
@@ -643,7 +719,7 @@ input[name=tab]{position:absolute;opacity:0;pointer-events:none;width:0;height:0
 【空切词】 产品名／品牌名／价格／活动力度／痛点与卖点话术／人物形象<br>
 【合规小字】 本视频人物由 AI 合成；功效与参数以产品实际规格为准，不得夸大。</textarea></div></div></div><div class="refcard"><div class="rvwrap"><video src="https://adsmind.gdtimg.com/ads_svp_video__0bc3peaguaaaaaak4o5yrzvbu6ienj4qa2sa.f0.mp4#t=1.5" preload="metadata" muted playsinline controls></video>
 <div class="rmeta"><span class="rmetat">比价问答式口播</span><br>7日日均消耗 &lt;1万 · ROI 3-5 · 稳定走势 · 3s完播 36.9%<br><span class="rmetab">CVR 15.96% 稳定输出</span></div>
-<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
+<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="pfold" onclick="togglePrompt(this)">展开 ▾</button><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
 <div class="pbody"><b>【剧情梗概】</b><br>－ 0—3秒：女主播举紫色打底裤开场，字幕「你们的打底裤是不是又掉裆卡裆了？」——先替观众说出痛点。<br>－ 4—10秒：蹲下拉伸演示弹力，翻内里讲一体织加绒；字幕「蹲跳不勒」「不掉裆」跟动作同步出现。<br>－ 11—15秒：价格对比收口：「比XX品牌还便宜」，引导点击购买。<br><br><b>【生成要求】</b><br>
 － 人物：参考视频的人物关系与年龄/穿搭/光线风格一致，人物可为 AI 合成<br>
 － 前 3 秒：必须完成情绪/冲突/利益点其中之一的视觉钩子，禁止静置开场<br>
@@ -663,7 +739,7 @@ input[name=tab]{position:absolute;opacity:0;pointer-events:none;width:0;height:0
 <div class="dmeta" style="color:#8fb4ff">· 关键位：0-3s 物理动作钩子（掰/弯/掀）→ 4-10s 上脚上身+字幕逐条对应 → 11-15s 换景走秀收口</div>
 <div class="refgrid"><div class="refcard"><div class="rvwrap"><video src="https://adsmind.gdtimg.com/ads_svp_video__0bc3d4ddmaagimaa23x2jfvbyhyegypqmnsa.f0.mp4#t=1.5" preload="metadata" muted playsinline controls></video>
 <div class="rmeta"><span class="rmetat">马丁靴弯折演示</span><br>7日日均消耗 &lt;1万 · ROI 3-5 · 爆发走势 · 3s完播 81.7%<br><span class="rmetab">爆发首日 1.15万 · 3s完播 81.7%</span></div>
-<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
+<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="pfold" onclick="togglePrompt(this)">展开 ▾</button><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
 <div class="pbody"><b>【剧情梗概】</b><br>－ 0—3秒：特写：双手掰开马丁靴靴口再弯折鞋底，字幕「能弯折的马丁靴」——物理动作即钩子。<br>－ 4—10秒：女主上脚走两步，侧拉链特写；字幕「皮软」「侧拉链免系带」「不磨脚踝」逐条对应画面。<br>－ 11—15秒：米色/石纹双地板换景走秀收尾，字幕「爆款推荐」，引导进直播间。<br><br><b>【生成要求】</b><br>
 － 人物：参考视频的人物关系与年龄/穿搭/光线风格一致，人物可为 AI 合成<br>
 － 前 3 秒：必须完成情绪/冲突/利益点其中之一的视觉钩子，禁止静置开场<br>
@@ -678,7 +754,7 @@ input[name=tab]{position:absolute;opacity:0;pointer-events:none;width:0;height:0
 【空切词】 产品名／品牌名／价格／活动力度／痛点与卖点话术／人物形象<br>
 【合规小字】 本视频人物由 AI 合成；功效与参数以产品实际规格为准，不得夸大。</textarea></div></div></div><div class="refcard"><div class="rvwrap"><video src="https://adsmind.gdtimg.com/ads_svp_video__0bc3pybweaad34aokihgcrvbs7qemj7agysa.f0.mp4#t=1.5" preload="metadata" muted playsinline controls></video>
 <div class="rmeta"><span class="rmetat">男装休闲裤三连实测</span><br>7日日均消耗 &lt;1万 · ROI &lt;3 · 稳定走势 · 3s完播 72.5%<br><span class="rmetab">3s完播 72.5% · CVR 15.2%</span></div>
-<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
+<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="pfold" onclick="togglePrompt(this)">展开 ▾</button><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
 <div class="pbody"><b>【剧情梗概】</b><br>－ 0—3秒：摄影棚干草背景，男模双手叉腰，镜头怼近腰头做工特写——先给「做工信号」。<br>－ 4—10秒：连续三个动作实测：下蹲拉伸、翻内里加绒、口袋塞钥匙挂件；每段字幕「弹力够」「加绒」「能装」。<br>－ 11—15秒：男模站定正面收口，字幕「软底软面 不勒不紧」，引导下单。<br><br><b>【生成要求】</b><br>
 － 人物：参考视频的人物关系与年龄/穿搭/光线风格一致，人物可为 AI 合成<br>
 － 前 3 秒：必须完成情绪/冲突/利益点其中之一的视觉钩子，禁止静置开场<br>
@@ -698,7 +774,7 @@ input[name=tab]{position:absolute;opacity:0;pointer-events:none;width:0;height:0
 <div class="dmeta" style="color:#8fb4ff">· 关键位：0-3s 多色揉捏近景连拍（无人物）→ 4-10s 上身廓形+配饰公式 → 11-15s 多色平铺+成分字幕</div>
 <div class="refgrid"><div class="refcard"><div class="rvwrap"><video src="https://adsmind.gdtimg.com/ads_svp_video__0bc3paaw2aab7aapwn7uxrvbw6aenv4ac3ka.f0.mp4#t=1.5" preload="metadata" muted playsinline controls></video>
 <div class="rmeta"><span class="rmetat">多色揉捏混剪</span><br>7日日均消耗 &lt;1万 · ROI &lt;3 · 新晋走势 · 3s完播 39.7%<br><span class="rmetab">CTR 5.62% · 新晋爬坡中</span></div>
-<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
+<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="pfold" onclick="togglePrompt(this)">展开 ▾</button><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
 <div class="pbody"><b>【剧情梗概】</b><br>－ 0—3秒：开场即手指揉捏黑/绿/酒红三色羊绒衫的近景连拍，揉捏回弹就是全部钩子，无人物无口播。<br>－ 4—10秒：驼色款男模上身一闪而过展示廓形，再回到黑色衫的拉扯回弹特写；字幕「高密针织 不起球」。<br>－ 11—15秒：多色平铺收尾，字幕「XX%羊毛」，引导点击。<br><br><b>【生成要求】</b><br>
 － 人物：参考视频的人物关系与年龄/穿搭/光线风格一致，人物可为 AI 合成<br>
 － 前 3 秒：必须完成情绪/冲突/利益点其中之一的视觉钩子，禁止静置开场<br>
@@ -713,7 +789,7 @@ input[name=tab]{position:absolute;opacity:0;pointer-events:none;width:0;height:0
 【空切词】 产品名／品牌名／价格／活动力度／痛点与卖点话术／人物形象<br>
 【合规小字】 本视频人物由 AI 合成；功效与参数以产品实际规格为准，不得夸大。</textarea></div></div></div><div class="refcard"><div class="rvwrap"><video src="https://adsmind.gdtimg.com/ads_svp_video__0bc3ueco2aaetyaozxhtozvb7iie5wqqj3ka.f0.mp4#t=1.5" preload="metadata" muted playsinline controls></video>
 <div class="rmeta"><span class="rmetat">珍珠项链搭配公式</span><br>7日日均消耗 &lt;1万 · ROI 3-5 · 波动走势 · 3s完播 80.1%<br><span class="rmetab">CVR 16.4% · 3s完播 80.1%</span></div>
-<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
+<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="pfold" onclick="togglePrompt(this)">展开 ▾</button><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
 <div class="pbody"><b>【剧情梗概】</b><br>－ 0—3秒：焦糖色高领打底衫领口近景，金项链往上一搭——用配饰混搭提升基础款溢价感。<br>－ 4—10秒：酒红款+珍珠项链的「小香风」造型特写，字幕「一条项链点亮的搭配公式」；挂架翻折展示面料。<br>－ 11—15秒：灰毛衣收尾：「秋冬打底这一件够了」，引导下单。<br><br><b>【生成要求】</b><br>
 － 人物：参考视频的人物关系与年龄/穿搭/光线风格一致，人物可为 AI 合成<br>
 － 前 3 秒：必须完成情绪/冲突/利益点其中之一的视觉钩子，禁止静置开场<br>
@@ -733,7 +809,7 @@ input[name=tab]{position:absolute;opacity:0;pointer-events:none;width:0;height:0
 <div class="dmeta" style="color:#8fb4ff">· 关键位：0-3s 源头人设亮相（工厂/档口/证书墙）→ 4-10s 黄字价格贴片+面料特写 → 11-15s 上身+紧迫收口</div>
 <div class="refgrid"><div class="refcard"><div class="rvwrap"><video src="https://adsmind.gdtimg.com/ads_svp_video__0bc3wmaa2aaaoyafyipj2fvbvmyebwzqadka.f0.mp4#t=1.5" preload="metadata" muted playsinline controls></video>
 <div class="rmeta"><span class="rmetat">档口人设捡漏价</span><br>7日日均消耗 &lt;1万 · ROI 3-5 · 爆发走势 · 3s完播 46.2%<br><span class="rmetab">CTR 7.49% 子类目最高</span></div>
-<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
+<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="pfold" onclick="togglePrompt(this)">展开 ▾</button><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
 <div class="pbody"><b>【剧情梗概】</b><br>－ 0—3秒：女主播蹲在成堆羊绒衫前的档口/工厂场景，字幕「品牌里面做货的」建立源头人设。<br>－ 4—10秒：黄色大字贴片「纯山羊绒 捡漏价」砸出价格钩子；面料贴肤特写+领口细节，把「贵价羊绒=工厂价」的落差具象化。<br>－ 11—15秒：模特上身黑色高领收口，字幕「今天最后一批」，引导点击。<br><br><b>【生成要求】</b><br>
 － 人物：参考视频的人物关系与年龄/穿搭/光线风格一致，人物可为 AI 合成<br>
 － 前 3 秒：必须完成情绪/冲突/利益点其中之一的视觉钩子，禁止静置开场<br>
@@ -748,7 +824,7 @@ input[name=tab]{position:absolute;opacity:0;pointer-events:none;width:0;height:0
 【空切词】 产品名／品牌名／价格／活动力度／痛点与卖点话术／人物形象<br>
 【合规小字】 本视频人物由 AI 合成；功效与参数以产品实际规格为准，不得夸大。</textarea></div></div></div><div class="refcard"><div class="rvwrap"><video src="https://adsmind.gdtimg.com/ads_svp_video__0b53fmco6aae6yaklhpdpbvb6kye54vqj32a.f0.mp4#t=1.5" preload="metadata" muted playsinline controls></video>
 <div class="rmeta"><span class="rmetat">39.8源头促销</span><br>7日日均消耗 &lt;1万 · ROI &lt;3 · 波动走势 · 3s完播 69.8%<br><span class="rmetab">CVR 18.74% · 3s完播 69.8%</span></div>
-<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
+<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="pfold" onclick="togglePrompt(this)">展开 ▾</button><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
 <div class="pbody"><b>【剧情梗概】</b><br>－ 0—3秒：女主播紫色保暖套装出镜：「千万不要等天冷」，紧迫感开场；贴片「源头生产厂家」建立信任。<br>－ 4—10秒：翻出透气网眼演示「保暖但透气」，卡车街拍强化产地背书；大字促销贴片「39.8 买一送一」。<br>－ 11—15秒：报价收口：字幕「厂家直发 今天下单今天发」，引导点击。<br><br><b>【生成要求】</b><br>
 － 人物：参考视频的人物关系与年龄/穿搭/光线风格一致，人物可为 AI 合成<br>
 － 前 3 秒：必须完成情绪/冲突/利益点其中之一的视觉钩子，禁止静置开场<br>
@@ -768,7 +844,7 @@ input[name=tab]{position:absolute;opacity:0;pointer-events:none;width:0;height:0
 <div class="dmeta" style="color:#8fb4ff">· 关键位：0-3s 弹幕刷屏/六标签阵列开场 → 4-10s 产品特写与标签逐条点亮 → 11-15s 礼盒/催单收口</div>
 <div class="refgrid"><div class="refcard"><div class="rvwrap"><video src="https://adsmind.gdtimg.com/ads_svp_video__0b53o4bteaadbyafpkhvdzvbs5yegj3qgmsa.f0.mp4#t=1.5" preload="metadata" muted playsinline controls></video>
 <div class="rmeta"><span class="rmetat">弹幕刷屏氛围</span><br>7日日均消耗 &lt;1万 · ROI &lt;3 · 爆发走势 · 3s完播 42.6%<br><span class="rmetab">CTR 6.94% · 爆发走势</span></div>
-<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
+<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="pfold" onclick="togglePrompt(this)">展开 ▾</button><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
 <div class="pbody"><b>【剧情梗概】</b><br>－ 0—3秒：开场铺满「想买」「已拍」「太美了」的弹幕贴片——把抢购氛围做成视觉钩子。<br>－ 4—10秒：琥珀+珍珠耳钉耳边特写穿插弹幕滚动，制造「大家都在抢」的羊群氛围；手部转动展示切面光泽。<br>－ 11—15秒：礼盒特写收尾 + 弹幕再次刷屏，字幕「最后XX件」，引导点击。<br><br><b>【生成要求】</b><br>
 － 人物：参考视频的人物关系与年龄/穿搭/光线风格一致，人物可为 AI 合成<br>
 － 前 3 秒：必须完成情绪/冲突/利益点其中之一的视觉钩子，禁止静置开场<br>
@@ -783,7 +859,7 @@ input[name=tab]{position:absolute;opacity:0;pointer-events:none;width:0;height:0
 【空切词】 产品名／品牌名／价格／活动力度／痛点与卖点话术／人物形象<br>
 【合规小字】 本视频人物由 AI 合成；功效与参数以产品实际规格为准，不得夸大。</textarea></div></div></div><div class="refcard"><div class="rvwrap"><video src="https://adsmind.gdtimg.com/ads_svp_video__0b53ymhfkaaopyaknlp43rvbjqyekxbq4vka.f0.mp4#t=1.5" preload="metadata" muted playsinline controls></video>
 <div class="rmeta"><span class="rmetat">六标签轰炸</span><br>7日日均消耗 &lt;1万 · ROI 3-5 · 爆发走势 · 3s完播 71.3%<br><span class="rmetab">ROI 4.63 · CTR 5.56% · 爆发中</span></div>
-<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
+<div class="pcard"><div class="phead"><span class="pt">📄 本条素材 Prompt（据视频内容生成）</span><button class="pfold" onclick="togglePrompt(this)">展开 ▾</button><button class="cbtn" onclick="copyPrompt(this)">📋 复制</button></div>
 <div class="pbody"><b>【剧情梗概】</b><br>－ 0—3秒：首帧六张标签齐上：「爆款热卖」「软底软面」「时尚百搭」「厂家直销」「气质穿搭」「新品上市」——信息轰炸式开场。<br>－ 4—10秒：标签与动作一一对应验证：弯腰系带、厚底特写、弯折鞋底演示「软」，每验证一条点亮一个标签。<br>－ 11—15秒：侧面细节收口，字幕「今天下单立减」，引导点击。<br><br><b>【生成要求】</b><br>
 － 人物：参考视频的人物关系与年龄/穿搭/光线风格一致，人物可为 AI 合成<br>
 － 前 3 秒：必须完成情绪/冲突/利益点其中之一的视觉钩子，禁止静置开场<br>
